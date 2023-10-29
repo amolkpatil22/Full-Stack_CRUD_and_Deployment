@@ -3,7 +3,7 @@ const ProductModel = require("../Model/ProductModel")
 const auth = require("../Middlewares/auth")
 
 const ProductRoute = express.Router()
-ProductRoute.use(auth)
+
 
 
 ProductRoute.get("/", async (req, res) => {
@@ -16,18 +16,18 @@ ProductRoute.get("/", async (req, res) => {
     }
 })
 
-ProductRoute.post("/add", async (req, res) => {
+ProductRoute.post("/add",auth, async (req, res) => {
     try {
         let product = ProductModel(req.body)
         await product.save()
-        res.status(200).send({ "msg": "Data fetched Successfully", "data": product })
+        res.status(200).send({ "msg": "Data added Successfully", "data": product })
     }
     catch (err) {
         res.status(400).send({ "Error": `${err}` })
     }
 })
 
-ProductRoute.patch("/update/:id", async (req, res) => {
+ProductRoute.patch("/update/:id",auth, async (req, res) => {
     let { id } = req.params
     let userID = req.body.userID
     try {
@@ -46,7 +46,7 @@ ProductRoute.patch("/update/:id", async (req, res) => {
 })
 
 
-ProductRoute.delete("/delete/:id", async (req, res) => {
+ProductRoute.delete("/delete/:id", auth,async (req, res) => {
     let { id } = req.params
     let userID = req.body.userID
     try {
